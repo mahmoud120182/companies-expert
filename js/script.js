@@ -7,8 +7,7 @@ const companyHeader = document.getElementById('companyHeader');
 const productsContainer = document.getElementById('productsContainer');
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
-const backBtn = document.getElementById('backBtn');
-const backFromSearchBtn = document.getElementById('backFromSearchBtn');
+const homeBtn = document.getElementById('homeBtn');
 const searchQuerySpan = document.getElementById('searchQuerySpan');
 const searchResultsContent = document.getElementById('searchResultsContent');
 const pageTitle = document.getElementById('pageTitle');
@@ -16,10 +15,30 @@ const pageTitle = document.getElementById('pageTitle');
 // Chart variables
 let quarterlyPurchasesChart, quarterlyPatientsChart;
 
+// Track current page state
+let currentPage = 'home';
+
+// Check if running locally
+const isLocalFile = window.location.protocol === 'file:';
+
 // Initialize the page
 function init() {
     renderCompanies();
     setupEventListeners();
+    
+    // Check URL parameters on initial load if not local file
+    if (!isLocalFile) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const companyId = urlParams.get('company');
+        const searchQuery = urlParams.get('search');
+
+        if (companyId) {
+            renderCompany(parseInt(companyId));
+        } else if (searchQuery) {
+            searchInput.value = searchQuery;
+            performSearch(searchQuery);
+        }
+    }
 }
 
 // Render all companies
@@ -44,6 +63,12 @@ function renderCompanies() {
 function renderCompany(companyId) {
     const company = companies.find(c => c.id === companyId);
     if (!company) return;
+
+    // Update page state
+    currentPage = 'company';
+    if (!isLocalFile) {
+        history.pushState({ page: 'company', companyId }, '', `?company=${companyId}`);
+    }
 
     // Update page title
     pageTitle.textContent = company.name;
@@ -207,9 +232,6 @@ function renderCharts(company) {
                             return '$' + context.raw.toLocaleString();
                         }
                     }
-                },
-                datalabels: {
-                    display: false
                 }
             }
         },
@@ -271,9 +293,6 @@ function renderCharts(company) {
                             return context.raw.toLocaleString() + ' patients';
                         }
                     }
-                },
-                datalabels: {
-                    display: false
                 }
             }
         },
@@ -301,6 +320,12 @@ function performSearch(query) {
     if (!query.trim()) {
         showHomePage();
         return;
+    }
+
+    // Update page state
+    currentPage = 'search';
+    if (!isLocalFile) {
+        history.pushState({ page: 'search', query }, '', `?search=${encodeURIComponent(query)}`);
     }
 
     const lowerQuery = query.toLowerCase();
@@ -422,6 +447,11 @@ function showHomePage() {
     companyPage.style.display = 'none';
     searchResultsPage.style.display = 'none';
     searchInput.value = '';
+    
+    currentPage = 'home';
+    if (!isLocalFile) {
+        history.pushState({ page: 'home' }, '', '/');
+    }
 }
 
 // Set up event listeners
@@ -435,13 +465,8 @@ function setupEventListeners() {
         }
     });
 
-    // Back buttons
-    backBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        showHomePage();
-    });
-
-    backFromSearchBtn.addEventListener('click', function(e) {
+    // Home button
+    homeBtn.addEventListener('click', function(e) {
         e.preventDefault();
         showHomePage();
     });
@@ -451,20 +476,24 @@ function setupEventListeners() {
         performSearch(searchInput.value.trim());
     });
 
-    // Search button (still works but not needed with real-time search)
-    searchBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        performSearch(searchInput.value.trim());
-    });
-
-    // Search on Enter key
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            performSearch(searchInput.value.trim());
-        }
-    });
+    // Handle browser back/forward buttons (only if not local file)
+    if (!isLocalFile) {
+        window.addEventListener('popstate', function(event) {
+            if (event.state) {
+                if (event.state.page === 'home') {
+                    showHomePage();
+                } else if (event.state.page === 'company') {
+                    renderCompany(event.state.companyId);
+                } else if (event.state.page === 'search') {
+                    searchInput.value = event.state.query;
+                    performSearch(event.state.query);
+                }
+            } else {
+                showHomePage();
+            }
+        });
+    }
 }
 
-// Initialize
+// Initialize the application
 document.addEventListener('DOMContentLoaded', init);
