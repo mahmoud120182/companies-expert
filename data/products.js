@@ -43,6 +43,34 @@ const products = [
         patients_q3: 400,
         patients_q4: 425
     },
+        {
+        id: 301,
+        companyId: 3,
+        name: "CardioPlus 50mg",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+        q1: 85000,
+        q2: 92000,
+        q3: 88000,
+        q4: 95000,
+        patients_q1: 1200,
+        patients_q2: 1300,
+        patients_q3: 1250,
+        patients_q4: 1400
+    },
+        {
+        id: 401,
+        companyId: 4,
+        name: "CardioPlus 50mg",
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=500&q=80",
+        q1: 85000,
+        q2: 92000,
+        q3: 88000,
+        q4: 95000,
+        patients_q1: 1200,
+        patients_q2: 1300,
+        patients_q3: 1250,
+        patients_q4: 1400
+    },
     // Add more products with patients data...
 ];
 
