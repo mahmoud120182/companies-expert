@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaPurchases</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <i class="fas fa-pills"></i>
+                <span id="pageTitle">PharmaPurchases</span>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search..." id="searchInput">
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="homePage">
+            <h1 class="page-title">Pharmaceutical Suppliers</h1>
+            <div class="companies-grid" id="companiesGrid"></div>
+        </div>
+
+        <div id="companyPage" style="display: none;">
+            <a href="#" class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+            <div class="company-header" id="companyHeader"></div>
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3 class="chart-title">Quarterly Purchases (2025)</h3>
+                    <canvas id="quarterlyPurchasesChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Quarterly Patients (2025)</h3>
+                    <canvas id="quarterlyPatientsChart"></canvas>
+                </div>
+            </div>
+            <h2 class="page-title">Products</h2>
+            <div class="products-container" id="productsContainer"></div>
+        </div>
+
+        <div id="searchResultsPage" style="display: none;">
+            <a href="#" class="back-btn" id="backFromSearchBtn">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+            <h2 class="search-results-title">Results for "<span id="searchQuerySpan"></span>"</h2>
+            <div id="searchResultsContent"></div>
+        </div>
+    </div>
+
+    <script src="data/companies.js"></script>
+    <script src="data/products.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
