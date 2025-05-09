@@ -61,6 +61,9 @@ function renderCompanies() {
 
 // Render a single company
 function renderCompany(companyId) {
+    // Scroll to top immediately when company view starts loading
+    window.scrollTo(0, 0);
+
     const company = companies.find(c => c.id === companyId);
     if (!company) return;
 
@@ -165,6 +168,14 @@ function renderCompany(companyId) {
     homePage.style.display = 'none';
     searchResultsPage.style.display = 'none';
     companyPage.style.display = 'block';
+
+    // Final smooth scroll to ensure we're at top after all rendering
+    setTimeout(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, 50);
 }
 
 // Render charts for a company
@@ -461,6 +472,11 @@ function setupEventListeners() {
         if (e.target.classList.contains('view-btn')) {
             e.preventDefault();
             const companyId = parseInt(e.target.getAttribute('data-id'));
+            
+            // Scroll to top immediately when clicking view button
+            window.scrollTo(0, 0);
+            
+            // Then render the company page
             renderCompany(companyId);
         }
     });
@@ -469,6 +485,12 @@ function setupEventListeners() {
     homeBtn.addEventListener('click', function(e) {
         e.preventDefault();
         showHomePage();
+        
+        // Optional: Scroll to top when going home
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 
     // Real-time search
@@ -483,6 +505,8 @@ function setupEventListeners() {
                 if (event.state.page === 'home') {
                     showHomePage();
                 } else if (event.state.page === 'company') {
+                    // Scroll to top when navigating back to company view
+                    window.scrollTo(0, 0);
                     renderCompany(event.state.companyId);
                 } else if (event.state.page === 'search') {
                     searchInput.value = event.state.query;
@@ -494,6 +518,5 @@ function setupEventListeners() {
         });
     }
 }
-
 // Initialize the application
 document.addEventListener('DOMContentLoaded', init);
